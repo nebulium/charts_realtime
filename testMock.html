@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test mock.js</title>
+	<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+	<script src="http://mockjs.com/dist/mock.js"></script>
+</head>
+<body>
+	<div id="mock">Mocking</div>
+	<script type="text/javascript">
+		Mock.mock(
+			'http://mockjs',{
+				"userName": '@name',
+				"age|1-100": 100,
+				"color" : "@color",
+				"date": "@date('yyyy-MM-dd')",
+				"url" : "@url()",
+				"content": "@paragraph()"
+			}
+		);
+
+		$("#mock").click(function(){
+			$.ajax({
+				url: "http://mockjs",
+				datatype: "json",
+				async: true,
+				data: {},
+				type: "GET",
+				beforeSend: function(){},
+				success: function(req) {
+					console.log(req);
+				},
+				complete: function(){},
+				error: function(){}
+			});
+		});
+	</script>
+</body>
+</html>
