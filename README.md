@@ -1,5 +1,6 @@
 # charts_realtime
-A demo shows the real-time changes of data in different types of charts.
+- A demo shows the real-time changes of data in different types of charts.
+- demo地址：
 
 ### 暂时设定
 - 纵坐标为吞吐量，横坐标先认为是均匀的时间(1h)
