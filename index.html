@@ -2,54 +2,34 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>A simple demo</title>
-	<style type="text/css">
-		*{ margin: 0; padding: 0; }
-		html,body{ height: 100%; width: 100%; }
-		.container {
+	<title>demo</title>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+	<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+	<script src="http://mockjs.com/dist/mock.js"></script>
+	<style>
+		.container-fluid {
+			width: 100%;
+			padding-left: 15px;
+			padding-right: 15px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		.chart-container {
+			width: 500px;
 			position: absolute;
-			width: 80%;
+			top: 20px;
 			left: 50%;
-			transform: translate(-50%);
-		}
-		.left {
-			float: left;
-			width: 50%;
-		}
-		.right {
-			overflow: hidden;
-		}
-		.cell {
-			padding: 10px;
-			text-align: center;
+			margin-left: -250px;
 		}
 	</style>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
 </head>
 <body>
-	<div class="container">
-	<div class="left">
-		<div class="cell">
-			<canvas id="chart1"></canvas>
-			<button id="addData1">添加数据</button>
-			<button id="removeData1">移除数据</button>
-		</div>
-		<div class="cell">
-			<canvas id="chart2"></canvas>
-			<button id = "addData2">添加数据</button>
+	<div class="container-fluid">
+		<div class="chart-container">
+			<canvas id="volumeChart"></canvas>
 		</div>
 	</div>
-	<div class="right">
-		<div class="cell">
-			<canvas id="chart3"></canvas>
-			<button id="addData3">添加数据</button>
-			<button id="removeData3">移除数据</button>
-		</div>
-		<div class="cell">
-			<canvas id="chart4"></canvas>
-			<button id = "addData4">添加数据</button>
-		</div>
-	</div>
-	</div>
+	
+	<script src="showCharts_realtime.js"></script>
 </body>
 </html>
