@@ -1,10 +1,21 @@
 Mock.mock('http://testjs',{
-	'num|1-55':50
+	"user|10":[{
+		"num|1-55":50
+	}]
 });
-
 var data_arr = [];
 var label_arr = [];
 var timeFormat = 'MM/DD/YYYY HH:mm';
+//memo
+// 每一次请求，需要
+// 1、初始化坐标
+// 2、请求数据
+// 3、绘制数据
+// 每一次请求发生在：
+// 1、用户完成有效输入
+// 2、坐标画满
+// 3、初始化的时候
+//util
 function newDateString(start,hours) {
 	return moment(start).add(hours,'h').format(timeFormat);
 }
@@ -18,8 +29,36 @@ function init_label_arr(start) {
 function init_arrs(start) {
 	data_arr.length = 0;
 	init_label_arr(start);
-	window.timeCharts.update();
+	doAjaxGet();
 }
+
+function render_chart(arr) {
+	var i = 0;
+	console.log(arr.length);
+	var timer = setInterval(function(){
+		if(i >= arr.length) {
+			clearInterval(timer);
+		}else{
+			data_arr.push(arr[i++].num);
+			window.timeCharts.update();
+		}
+	},1000);
+}
+
+function doAjaxGet(){
+	$.ajax({
+		type:'GET',
+		url:'http://testjs',
+		async: true,
+		data:{},
+		dataType: 'json',
+		success: function(data) {
+			var resultArr = data.user;
+			render_chart(resultArr);
+		}
+	});
+}
+
 window.onload = function(){
 	var ctx = document.getElementById('timeChart').getContext('2d');
 	window.timeCharts = new Chart(ctx, {
@@ -54,26 +93,31 @@ window.onload = function(){
 		}
 	});
 	init_arrs(startTime);
-	timer = setInterval(function(){
-		$.ajax({
-			type:'GET',
-			url:'http://testjs',
-			async: true,
-			data:{},
-			dataType: 'json',
-			success: function(data){
-				if(data_arr.length >= 10) {
-					startTime = newDateString(label_arr[label_arr.length - 1],1);
-					init_arrs(newDateString(startTime));
-				} else {
-					if(data.num == -1) {
-						data_arr.push(NaN);
-					} else{
-						data_arr.push(data.num);
-					}
-					window.timeCharts.update();
-				}
-			}
-		});
-	},1000);
 };
+
+
+
+
+// var input = document.getElementById('date');
+// var btn = document.getElementById('btn');
+// btn.onclick = function() {
+// 	console.log(input.value);
+// 	if(input.value) {
+// 		clearInterval(timer);
+// 		startTime = input.value + ' 00:00';
+// 		init_arrs(startTime);
+// 		anotherTimer = setInterval(function(){
+// 			$.ajax({
+// 				type:'GET',
+// 				url:'http://testjs',
+// 				async: true,
+// 				data:{},
+// 				dataType: 'json',
+// 				success: function(data) {
+// 					onSuccess(data);
+// 				}
+// 			});
+// 		},1000);
+// 	}
+// 	return false;
+// }

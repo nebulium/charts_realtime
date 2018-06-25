@@ -9,16 +9,16 @@
 <body>
 	<div id="mock">Mocking</div>
 	<script type="text/javascript">
-		Mock.mock(
-			'http://mockjs',{
-				"userName": '@name',
-				"age|1-100": 100,
-				"color" : "@color",
-				"date": "@date('yyyy-MM-dd')",
-				"url" : "@url()",
-				"content": "@paragraph()"
-			}
-		); 
+		Mock.mock('http://mockjs',{
+			"user|10":[{
+				"timestamp":"@date(yyyy-MM-dd)",
+				"volume|10-50":50,
+				"preNext1|10-50":50,
+				"preNext2|10-50":50,
+				"preNext3|10-50":50,
+				"preNext4|10-50":50,
+			}]
+		});
 
 		$("#mock").click(function(){
 			$.ajax({
@@ -29,7 +29,10 @@
 				type: "GET",
 				beforeSend: function(){},
 				success: function(req) {
-					console.log(req);
+					var result = $.parseJSON(req).user;
+					for(var i = 0; i < result.length; i++){
+						console.log(result[i].timestamp);
+					}
 				},
 				complete: function(){},
 				error: function(){}

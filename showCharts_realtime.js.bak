@@ -13,16 +13,16 @@ Mock.mock(
 	}
 );
 
-// Mock.mock('http://mockjs',{
-// 	"user|10":[{
-// 		"timestamp":"@date(yyyy-MM-dd)",
-// 		"volume|10-50":50,
-// 		"preNext1|10-50":50,
-// 		"preNext2|10-50":50,
-// 		"preNext3|10-50":50,
-// 		"preNext4|10-50":50,
-// 	}]
-// });
+Mock.mock('http://mockjs',{
+	"user|10":[{
+		"timestamp":"@date(yyyy-MM-dd)",
+		"volume|10-50":50,
+		"preNext1|10-50":50,
+		"preNext2|10-50":50,
+		"preNext3|10-50":50,
+		"preNext4|10-50":50,
+	}]
+});
 
 //datas
 var nodes_num = 7 * 24;

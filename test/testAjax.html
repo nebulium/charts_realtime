@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test ajax</title>
+</head>
+<body>
+	<form>
+		<input type="date" name="dates" id="dates">
+		<br>
+		<button type="submit" id="btn">Confirm</button>
+	</form>
+	<script>
+		var input = document.getElementById('dates')
+		var btn = document.getElementById('btn');
+		btn.onclick = function() {
+			console.log(input.value);
+			return false;
+		}
+	</script>
+</body>
+</html>

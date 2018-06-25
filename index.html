@@ -16,11 +16,11 @@
 			margin-right: auto;
 		}
 		.chart-container {
-			width: 500px;
+			width: 800px;
 			position: absolute;
 			top: 20px;
 			left: 50%;
-			margin-left: -250px;
+			transform: translateX(-50%);
 		}
 	</style>
 </head>
@@ -30,6 +30,10 @@
 			<canvas id="volumeChart"></canvas>
 		</div>
 	</div>
+	<form>
+		<input type="date" id="dates">
+		<button id="btn" type="button">确定</button>
+	</form>
 	
 	<script src="showCharts_realtime.js"></script>
 </body>
