@@ -35,9 +35,11 @@ function init_arrs(start) {
 function render_chart(arr) {
 	var i = 0;
 	console.log(arr.length);
-	var timer = setInterval(function(){
+	timer = setInterval(function(){
 		if(i >= arr.length) {
 			clearInterval(timer);
+			startTime = newDateString(label_arr[label_arr.length - 1],1);
+			init_arrs(startTime);
 		}else{
 			data_arr.push(arr[i++].num);
 			window.timeCharts.update();
@@ -61,6 +63,8 @@ function doAjaxGet(){
 
 window.onload = function(){
 	var ctx = document.getElementById('timeChart').getContext('2d');
+	var input = document.getElementById('date');
+	var btn = document.getElementById('btn');
 	window.timeCharts = new Chart(ctx, {
 		type: 'line',
 		data: {
@@ -93,31 +97,12 @@ window.onload = function(){
 		}
 	});
 	init_arrs(startTime);
+	btn.onclick = function() {
+		if(input.value) {
+			if(timer) clearInterval(timer);
+			startTime = input.value + ' 00:00';
+			init_arrs(startTime);
+		}
+		return false;
+	};
 };
-
-
-
-
-// var input = document.getElementById('date');
-// var btn = document.getElementById('btn');
-// btn.onclick = function() {
-// 	console.log(input.value);
-// 	if(input.value) {
-// 		clearInterval(timer);
-// 		startTime = input.value + ' 00:00';
-// 		init_arrs(startTime);
-// 		anotherTimer = setInterval(function(){
-// 			$.ajax({
-// 				type:'GET',
-// 				url:'http://testjs',
-// 				async: true,
-// 				data:{},
-// 				dataType: 'json',
-// 				success: function(data) {
-// 					onSuccess(data);
-// 				}
-// 			});
-// 		},1000);
-// 	}
-// 	return false;
-// }
