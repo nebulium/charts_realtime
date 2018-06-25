@@ -1,4 +1,4 @@
-//实时数据
+//模拟数据
 // Random.float(60, 100, 3, 5)
 // Mock.mock('@float(60, 100, 3, 5)')
 var random = '@float(0,100,3,5)';
@@ -12,40 +12,38 @@ Mock.mock(
 		'preNext4':random
 	}
 );
-var nodes_num = 14;
-var start = 1;
-//finally
-//data_arr_volume.length = nodes_num
-//data_arr_preNext1.length = nodes_num + 1;
-//data_arr_predict.length = nodes_num + 4;
-//label_arr.length = data_arr_predict
 
-//when rendering,
-//if volume is [1,2]
-//prenext1 is  [empty,3,4]
-//predict is   [empty,empty,4,5,6,7]
-//label_arr's length is fixed
+//datas
+var nodes_num = 7 * 24;
+var startTime = '2013-02-08 09:30 ';
+var timeFormat = 'YYYY/MM/DD HH:mm';
+var borderWidth = 1;
+
 var data_arr_volume = [];
 var data_arr_preNext1 = []; //preNext1 is rendered since the next timestamp
 var data_arr_predict = [];
 var label_arr = [];
-function init_array(start) {
+
+//utils
+function newDateString(start,hours) {
+	return moment(start).add(hours,'h').format(timeFormat);
+}
+
+function init_array(startTime) {
 	data_arr_volume.length = 0;
 	data_arr_preNext1.length = 1;
 	data_arr_predict.length = 0;
-
 	label_arr.length = nodes_num + 4;
-	init_label_arr(start);
-
+	init_label_arr(startTime);
 }
-function init_label_arr(start) {
+function init_label_arr(startTime) {
 	for(var i = 0; i < label_arr.length; i++) {
-		label_arr[i] = start;
-		start++;
+		label_arr[i] = newDateString(startTime,i);
 	}
 }
+
+//main
 window.onload = function() {
-	init_array(start);
 	var ctx = document.getElementById('volumeChart').getContext('2d');
 	window.volumeChart = new Chart(ctx, {
 		type: 'line',
@@ -55,18 +53,21 @@ window.onload = function() {
 				label: '实际曲线',
 				data: data_arr_volume,
 				yAxisID: 'y-axis-1',
+				borderWidth: borderWidth,
 				borderColor: 'rgb(255,99,132)',
 				backgroundColor: 'rgb(255,99,132)',
 				fill: false
 			}, {
 				label: '预测曲线',
 				data: data_arr_preNext1,
+				borderWidth: borderWidth,
 				borderColor: 'rgb(54,162,235)',
 				backgroundColor: 'rgb(54,162,235)',
 				fill: false
 			}, {
 				label: '下一段',
 				data: data_arr_predict,
+				borderWidth: borderWidth,
 				borderColor: 'rgb(0,0,0)',
 				backgroundColor: 'rgb(0,0,0)',
 				fill: false
@@ -82,6 +83,9 @@ window.onload = function() {
 			scales: {
 				xAxes: [{
 					display: true,
+					time: {
+						format: timeFormat
+					}
 				}],
 				yAxes: [{
 					type: 'linear',
@@ -96,6 +100,9 @@ window.onload = function() {
 			}
 		}
 	});
+	init_array(startTime);
+
+	//get data from url
 	timer = setInterval(function(){
 		$.ajax({
 			type: 'GET',
@@ -104,49 +111,48 @@ window.onload = function() {
 			data: {},
 			dataType: 'json',
 			success: function(data) {
-				//每次显示7天的值
+
 				if(data_arr_preNext1.length >= nodes_num){
-					// data_arr_preNext1.shift();
-					start = label_arr[nodes_num - 1] + 1;
-					init_array(start);
-				}
-
-				//clear the data_arr_predict
-				data_arr_predict.length = 0;
-				data_arr_predict.length = data_arr_volume.length + 1;
-
-				if(data.volume === -1) {
-					data_arr_volume.push(data_arr_volume[data_arr_volume.length - 1]);
-				}else {
-					data_arr_volume.push(data.volume);
-				}
-
-				if(data.preNext1 === -1) {
-					var tmp = data_arr_preNext1[data_arr_preNext1.length - 1];
-					data_arr_preNext1.push(tmp);
-					data_arr_predict.push(tmp);
+					startTime = newDateString(label_arr[label_arr.length - 1],1);
+					init_array(startTime);
 				}else{
-					data_arr_preNext1.push(data.preNext1);
-					data_arr_predict.push(data.preNext1);
-				}
+					data_arr_predict.length = 0;
+					data_arr_predict.length = data_arr_volume.length + 1;
 
-				if(data.preNext2 === -1) {
-					data_arr_predict.push(NaN);
-				}else{
-					data_arr_predict.push(data.preNext2);
-				}
+					if(data.volume === -1) {
+						data_arr_volume.push(data_arr_volume[data_arr_volume.length - 1]);
+					}else {
+						data_arr_volume.push(data.volume);
+					}
 
-				if(data.preNext3 === -1) {
-					data_arr_predict.push(NaN);
-				}else{
-					data_arr_predict.push(data.preNext3);
-				}
+					if(data.preNext1 === -1) {
+						var tmp = data_arr_preNext1[data_arr_preNext1.length - 1];
+						data_arr_preNext1.push(tmp);
+						data_arr_predict.push(tmp);
+					}else{
+						data_arr_preNext1.push(data.preNext1);
+						data_arr_predict.push(data.preNext1);
+					}
 
-				if(data.preNext4 === -1) {
-					data_arr_predict.push(NaN);
-				}else{
-					data_arr_predict.push(data.preNext4);
+					if(data.preNext2 === -1) {
+						data_arr_predict.push(NaN);
+					}else{
+						data_arr_predict.push(data.preNext2);
+					}
+
+					if(data.preNext3 === -1) {
+						data_arr_predict.push(NaN);
+					}else{
+						data_arr_predict.push(data.preNext3);
+					}
+
+					if(data.preNext4 === -1) {
+						data_arr_predict.push(NaN);
+					}else{
+						data_arr_predict.push(data.preNext4);
+					}
 				}
+				
 				window.volumeChart.update();
 			}
 		});
