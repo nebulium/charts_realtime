@@ -1,7 +1,7 @@
 Mock.mock('http://testjs',{
 	"user|10":[{
 		"num|1-55":50
-	}]
+	}] 
 });
 var data_arr = [];
 var label_arr = [];

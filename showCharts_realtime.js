@@ -1,32 +1,18 @@
 //模拟数据
-// Random.float(60, 100, 3, 5)
-// Mock.mock('@float(60, 100, 3, 5)')
-var random = '@float(30,50,3,5)';
-Mock.mock(
-	'http://mockjs', {
-		'timestamp': 1,
-		'volume': random,
-		'preNext1':random,
-		'preNext2':random,
-		'preNext3':random,
-		'preNext4':random
-	}
-);
-
-// Mock.mock('http://mockjs',{
-// 	"user|10":[{
-// 		"timestamp":"@date(yyyy-MM-dd)",
-// 		"volume|10-50":50,
-// 		"preNext1|10-50":50,
-// 		"preNext2|10-50":50,
-// 		"preNext3|10-50":50,
-// 		"preNext4|10-50":50,
-// 	}]
-// });
+Mock.mock('http://testjs',{
+	"user|20":[{
+		"timestamp":"@date(yyyy-MM-dd)",
+		"volume|1-55":50,
+		"preNext1|1-55":50,
+		"preNext2|1-55":50,
+		"preNext3|1-55":50,
+		"preNext4|1-55":50
+	}] 
+});
 
 //datas
-var nodes_num = 7 * 24;
-var startTime = '2013-02-08 09:30 ';
+var nodes_num = 20;
+var startTime = '2013-02-08 00:00 ';
 var timeFormat = 'YYYY/MM/DD HH:mm';
 var borderWidth = 1;
 var pointRadius = 1;
@@ -48,6 +34,7 @@ function init_array(startTime) {
 	data_arr_predict.length = 0;
 	label_arr.length = nodes_num + 4;
 	init_label_arr(startTime);
+	doAjaxGet();
 }
 function init_label_arr(startTime) {
 	for(var i = 0; i < label_arr.length; i++) {
@@ -55,9 +42,48 @@ function init_label_arr(startTime) {
 	}
 }
 
+function doAjaxGet() {
+	$.ajax({
+		type: 'GET',
+		url: 'http://testjs',
+		async: true,
+		data: {},
+		dataType: 'json',
+		success: function(data) {
+			var resultArr = data.user;
+			render_chart(resultArr);
+		}
+	});
+}
+
+function render_chart(arr) {
+	var i = 0;
+	timer = setInterval(function(){
+		if(i >= nodes_num) {
+			clearInterval(timer);
+			startTime = label_arr[label_arr.length - 4];
+			init_array(startTime);
+		}else {
+			var data = arr[i++];
+			data_arr_predict.length = 0;
+			data_arr_predict.length = data_arr_volume.length + 1;
+
+			data_arr_volume.push(data.volume);
+			data_arr_preNext1.push(data.preNext1);
+			data_arr_predict.push(data.preNext1);
+			data_arr_predict.push(data.preNext2);
+			data_arr_predict.push(data.preNext3);
+			data_arr_predict.push(data.preNext4);
+			window.volumeChart.update();
+		}
+	},1000);
+}
+
 //main
 window.onload = function() {
 	var ctx = document.getElementById('volumeChart').getContext('2d');
+	var btn = document.getElementById('btn');
+	var input = document.getElementById('dates');
 	window.volumeChart = new Chart(ctx, {
 		type: 'line',
 		data: {
@@ -117,60 +143,12 @@ window.onload = function() {
 		}
 	});
 	init_array(startTime);
-	window.volumeChart.update();
-	//get data from url
-	timer = setInterval(function(){
-		$.ajax({
-			type: 'GET',
-			url: 'http://mockjs',
-			async: true,
-			data: {},
-			dataType: 'json',
-			success: function(data) {
-
-				if(data_arr_preNext1.length >= nodes_num){
-					startTime = label_arr[label_arr.length - 4]
-					init_array(startTime);
-				}else{
-					data_arr_predict.length = 0;
-					data_arr_predict.length = data_arr_volume.length + 1;
-
-					if(data.volume === -1) {
-						data_arr_volume.push(data_arr_volume[data_arr_volume.length - 1]);
-					}else {
-						data_arr_volume.push(data.volume);
-					}
-
-					if(data.preNext1 === -1) {
-						var tmp = data_arr_preNext1[data_arr_preNext1.length - 1];
-						data_arr_preNext1.push(tmp);
-						data_arr_predict.push(tmp);
-					}else{
-						data_arr_preNext1.push(data.preNext1);
-						data_arr_predict.push(data.preNext1);
-					}
-
-					if(data.preNext2 === -1) {
-						data_arr_predict.push(NaN);
-					}else{
-						data_arr_predict.push(data.preNext2);
-					}
-
-					if(data.preNext3 === -1) {
-						data_arr_predict.push(NaN);
-					}else{
-						data_arr_predict.push(data.preNext3);
-					}
-
-					if(data.preNext4 === -1) {
-						data_arr_predict.push(NaN);
-					}else{
-						data_arr_predict.push(data.preNext4);
-					}
-				}
-				
-				window.volumeChart.update();
-			}
-		});
-	},1000);
+	btn.onclick = function(){
+		if(input.value) {
+			if(timer) clearInterval(timer);
+			startTime = input.value + ' 00:00';
+			init_array(startTime);
+		}
+		return false;
+	};
 };
