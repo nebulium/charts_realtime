@@ -2,17 +2,19 @@
 Mock.mock('http://testjs',{
 	"user|168":[{
 		"timestamp":"@date(yyyy-MM-dd)",
-		"volume|80-83":50,
+		"volume|70-73":50,
 		"preNext1|80-83":52,
 		"preNext2|80-83":53,
 		"preNext3|80-83":52,
-		"preNext4|80-83":54
+		"preNext4|80-83":54,
+		"preNext5|80-83":55,
+		"preNext6|80-83":55
 	}] 
 });
 
 //default data
 var nodes_num = 7 * 24;
-var startTime = '2013-02-08 00:00 ';
+var startTime = '2013-02-08 00:00';
 var timeFormat = 'YYYY/MM/DD HH:mm';
 
 //storage data for x & y axis
@@ -31,7 +33,7 @@ function init_array(startTime) {
 	data_arr_volume.length = 0;
 	data_arr_preNext1.length = 1;
 	data_arr_predict.length = 0;
-	label_arr.length = nodes_num + 4;
+	label_arr.length = nodes_num + 6;
 	init_label_arr(startTime);
 	doAjaxGet();
 }
@@ -51,6 +53,7 @@ function doAjaxGet() {
 		dataType: 'json',
 		success: function(data) {
 			var resultArr = data.user;
+			console.log(data);
 			render_chart(resultArr);
 		}
 	});
@@ -74,6 +77,8 @@ function render_chart(arr) {
 			data_arr_predict.push(data.preNext2);
 			data_arr_predict.push(data.preNext3);
 			data_arr_predict.push(data.preNext4);
+			data_arr_predict.push(data.preNext5);
+			data_arr_predict.push(data.preNext6);
 			window.volumeChart.update();
 		}
 	},1000);
