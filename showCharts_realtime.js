@@ -2,11 +2,11 @@
 Mock.mock('http://testjs',{
 	"user|168":[{
 		"timestamp":"@date(yyyy-MM-dd)",
-		"volume|50-53":50,
-		"preNext1|50-53":52,
-		"preNext2|50-53":53,
-		"preNext3|50-53":52,
-		"preNext4|50-53":54
+		"volume|80-83":50,
+		"preNext1|80-83":52,
+		"preNext2|80-83":53,
+		"preNext3|80-83":52,
+		"preNext4|80-83":54
 	}] 
 });
 
