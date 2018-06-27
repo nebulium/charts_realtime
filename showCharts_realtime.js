@@ -1,23 +1,21 @@
 //模拟数据
 Mock.mock('http://testjs',{
-	"user|20":[{
+	"user|168":[{
 		"timestamp":"@date(yyyy-MM-dd)",
-		"volume|1-55":50,
-		"preNext1|1-55":50,
-		"preNext2|1-55":50,
-		"preNext3|1-55":50,
-		"preNext4|1-55":50
+		"volume|50-53":50,
+		"preNext1|50-53":52,
+		"preNext2|50-53":53,
+		"preNext3|50-53":52,
+		"preNext4|50-53":54
 	}] 
 });
 
-//datas
-var nodes_num = 20;
+//default data
+var nodes_num = 7 * 24;
 var startTime = '2013-02-08 00:00 ';
 var timeFormat = 'YYYY/MM/DD HH:mm';
-var borderWidth = 1;
-var pointRadius = 1;
-var pointHoverRadius;
 
+//storage data for x & y axis
 var data_arr_volume = [];
 var data_arr_preNext1 = []; //preNext1 is rendered since the next timestamp
 var data_arr_predict = [];
@@ -28,6 +26,7 @@ function newDateString(start,hours) {
 	return moment(start).add(hours,'h').format(timeFormat);
 }
 
+//important procedure
 function init_array(startTime) {
 	data_arr_volume.length = 0;
 	data_arr_preNext1.length = 1;
@@ -42,6 +41,7 @@ function init_label_arr(startTime) {
 	}
 }
 
+//doAjaxGet(timestamp,dataNums)
 function doAjaxGet() {
 	$.ajax({
 		type: 'GET',
@@ -84,6 +84,10 @@ window.onload = function() {
 	var ctx = document.getElementById('volumeChart').getContext('2d');
 	var btn = document.getElementById('btn');
 	var input = document.getElementById('dates');
+	Chart.defaults.global.elements.point.radius = 1;
+	Chart.defaults.global.elements.line.borderWidth = 1;
+	Chart.defaults.global.elements.line.fill = false;
+	Chart.defaults.global.elements.line.tension = 0.4;
 	window.volumeChart = new Chart(ctx, {
 		type: 'line',
 		data: {
@@ -92,35 +96,25 @@ window.onload = function() {
 				label: '实际曲线',
 				data: data_arr_volume,
 				yAxisID: 'y-axis-1',
-				borderWidth: borderWidth,
-				pointRadius: pointRadius,
 				borderColor: 'rgb(255,99,132)',
 				backgroundColor: 'rgb(255,99,132)',
-				fill: false
 			}, {
 				label: '预测曲线',
 				data: data_arr_preNext1,
-				borderWidth: borderWidth,
-				pointRadius: pointRadius,
 				borderColor: 'rgb(54,162,235)',
 				backgroundColor: 'rgb(54,162,235)',
-				fill: false
 			}, {
 				label: '下一段',
 				data: data_arr_predict,
-				borderWidth: borderWidth,
-				pointRadius: pointRadius,
 				borderColor: 'rgb(0,0,0)',
 				backgroundColor: 'rgb(0,0,0)',
-				fill: false
 			}]
 		},
 		options: {
 			responsive: true,
-			elements: {
-				line: {
-					tension: 0,
-				}
+			title: {
+				display: true,
+				text: '实时流量与预测流量分析'
 			},
 			scales: {
 				xAxes: [{

@@ -8,6 +8,8 @@
 	<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 	<script src="http://mockjs.com/dist/mock.js"></script>
 	<style>
+	*{margin:0;padding:0;}
+	body,html{height: 100%; font-size: 16px; font-family:sans-serif; color: rgba(0,0,0,0.7);}
 		.container-fluid {
 			width: 100%;
 			padding-left: 15px;
@@ -15,25 +17,50 @@
 			margin-left: auto;
 			margin-right: auto;
 		}
-		.chart-container {
+		.container {
 			width: 800px;
 			position: absolute;
 			top: 20px;
 			left: 50%;
 			transform: translateX(-50%);
+			text-align: center;
+		}
+		input {
+			margin-left: 5px;
+		  padding: 5px 10px;
+		  border-radius: 2px;
+		  border: 1px solid #ccc;
+		  background: #fff;
+		  box-shadow: none;
+		  box-sizing: border-box;
+		  font-size: 1em;
+		  /*appearance: none;*/
+		}
+		input:focus {
+		  border-color: #999;
+		  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+		}
+		button {
+			padding: 8px 20px;
+			background-color: #fff;
+			border-radius: 2px;
+			box-sizing: border-box;
+			border: 1px solid rgba(0,0,0,0.3);
 		}
 	</style>
 </head>
 <body>
 	<div class="container-fluid">
-		<div class="chart-container">
+		<div class="container">
 			<canvas id="volumeChart"></canvas>
+			<form>
+				<label for="dates">选择监控起点</label>
+				<input type="date" id="dates" value="2013-02-08">
+				<button id="btn" type="button">确定</button>
+			</form>
 		</div>
 	</div>
-	<form>
-		<input type="date" id="dates">
-		<button id="btn" type="button">确定</button>
-	</form>
+
 	
 	<script src="showCharts_realtime.js"></script>
 </body>
